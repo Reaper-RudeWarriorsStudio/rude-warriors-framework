@@ -1,5 +1,0 @@
-{
-  "name": "RudeWarriors.Framework.Editor",
-  "references": ["RudeWarriors.Framework"],
-  "includePlatforms": ["Editor"]
-}
