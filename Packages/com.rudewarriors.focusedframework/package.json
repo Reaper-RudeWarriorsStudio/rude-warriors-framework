@@ -1,0 +1,19 @@
+{
+  "name": "com.rudewarriors.focusedframework",
+  "displayName": "Rude Warriors Framework",
+  "version": "0.1.0",
+  "unity": "2022.3",
+  "description": "Focused-layer Unity framework built by Rude Warriors Studio for simplified, distraction-free development.",
+  "author": {
+    "name": "Rude Warriors Studio",
+    "email": "soultaker.dev@outlook.com"
+  },
+  "keywords": ["framework", "focused", "unity", "rude-warriors"],
+  "samples": [
+    {
+      "displayName": "Minimal Starter",
+      "description": "Bootstrap prefab and demo scene for quick setup.",
+      "path": "Samples~/MinimalStarter"
+    }
+  ]
+}
