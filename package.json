@@ -1,19 +1,35 @@
 {
-  "name": "com.rudewarriors.framework",
-  "displayName": "Rude Warriors Framework",
-  "version": "0.1.0",
+  "name": "com.rudewarriors.focusedframework",
+  "version": "1.0.0",
+  "displayName": "Rude Warriors Focused Framework",
+  "description": "A focused, modular C# framework for Unity — built by Rude Warrior's Studio. Provides service architecture, event bus, data management, and debugging utilities for clean, maintainable projects.",
   "unity": "2021.3",
-  "description": "Lightweight modular service-based framework for Unity.",
+  "unityRelease": "0f1",
   "author": {
-    "name": "Rude Warrior’s Studio",
-    "url": "https://github.com/yourusername/rude-warriors-framework"
+    "name": "Reaper (Rude Warrior's Studio)",
+    "email": "soultaker.dev@outlook.com",
+    "url": "https://github.com/Reaper-RudeWarriorsStudio"
   },
   "license": "MIT",
+  "documentationUrl": "https://github.com/Reaper-RudeWarriorsStudio/rude-warriors-framework/blob/main/Docs~/Architecture.md",
+  "changelogUrl": "https://github.com/Reaper-RudeWarriorsStudio/rude-warriors-framework/blob/main/CHANGELOG.md",
+  "keywords": [
+    "unity",
+    "framework",
+    "architecture",
+    "services",
+    "rude",
+    "warriors",
+    "focused",
+    "eventbus",
+    "core"
+  ],
+  "dependencies": {},
   "samples": [
     {
-      "displayName": "Minimal Setup",
-      "description": "Example of bootstrap and service registration.",
-      "path": "Samples~/MinimalSetup"
+      "displayName": "Basic Setup Example",
+      "description": "A minimal example showing how to initialize and link the Focused Framework using the fluent builder API.",
+      "path": "Samples~/BasicSetup"
     }
   ]
 }
