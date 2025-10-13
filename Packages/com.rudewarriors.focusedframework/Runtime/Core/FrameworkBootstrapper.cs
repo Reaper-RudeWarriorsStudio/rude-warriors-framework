@@ -1,23 +1,27 @@
 using UnityEngine;
-using RudeWarriors.Framework.Core;
 
 namespace RudeWarriors.Framework.Core
 {
     /// <summary>
-    /// Initializes and registers all core systems for the Rude Warriors Framework.
-    /// Place this in your startup scene once; it persists across scene loads.
+    /// Initializes the Rude Warriors Framework via the new builder pattern.
+    /// This acts as a drop-in legacy bridge for users who prefer prefab setup.
     /// </summary>
     [DefaultExecutionOrder(-300)]
     public class FrameworkBootstrapper : MonoBehaviour
     {
-        [Header("Optional Prefabs")]
-        [SerializeField] private AudioService audioServicePrefab;
-        [SerializeField] private UIService uiServicePrefab;
+        [Header("Optional Prefabs / Instances")]
+        [Tooltip("Optional AudioService instance to register.")]
+        [SerializeField] private AudioService audioService;
+
+        [Tooltip("Optional UIService instance to register.")]
+        [SerializeField] private UIService uiService;
+
+        [Tooltip("Include the runtime Debug Console on launch.")]
         [SerializeField] private bool includeDebugConsole = true;
 
         private void Awake()
         {
-            // Ensure singleton instance
+            // Prevent duplicate bootstrappers
             if (FindObjectsOfType<FrameworkBootstrapper>().Length > 1)
             {
                 Destroy(gameObject);
@@ -25,64 +29,24 @@ namespace RudeWarriors.Framework.Core
             }
 
             DontDestroyOnLoad(gameObject);
-
-            InitializeCore();
+            InitializeFramework();
         }
 
-        private void InitializeCore()
+        private void InitializeFramework()
         {
-            // 1. Logging system
-            RWDebug.System("Initializing Rude Warriors Framework...");
+            RWDebug.System("Initializing Rude Warriors Framework via Bootstrapper...");
 
-            // 2. Core event system
-            var eventBus = new EventBus();
-            ServiceLocator.Register<IEventBus>(eventBus);
-            RWDebug.System("EventBus registered.");
+            Framework.Init()
+                .UseEventBus()
+                .UseDataService()
+                .UseTimeService()
+                .UseSaveProfiles()
+                .UseUI(uiService)
+                .UseAudio(audioService)
+                .UseDebugConsole()
+                .Build();
 
-            // 3. Data service
-            var dataService = new DataService();
-            ServiceLocator.Register<IDataService>(dataService);
-            RWDebug.System("DataService registered.");
-
-            // 4. Time control
-            var timeService = new GameObject("TimeService").AddComponent<TimeService>();
-            DontDestroyOnLoad(timeService.gameObject);
-            ServiceLocator.Register<ITimeService>(timeService);
-            RWDebug.System("TimeService registered.");
-
-            // 5. Save profiles
-            var saveManager = new GameObject("SaveProfileManager").AddComponent<SaveProfileManager>();
-            DontDestroyOnLoad(saveManager.gameObject);
-            ServiceLocator.Register<ISaveProfileManager>(saveManager);
-            RWDebug.System("SaveProfileManager registered.");
-
-            // 6. Audio (optional prefab)
-            if (audioServicePrefab)
-            {
-                var audio = Instantiate(audioServicePrefab);
-                DontDestroyOnLoad(audio.gameObject);
-                ServiceLocator.Register<IAudioService>(audio);
-                RWDebug.System("AudioService registered.");
-            }
-
-            // 7. UI (optional prefab)
-            if (uiServicePrefab)
-            {
-                var ui = Instantiate(uiServicePrefab);
-                DontDestroyOnLoad(ui.gameObject);
-                ServiceLocator.Register<IUIService>(ui);
-                RWDebug.System("UIService registered.");
-            }
-
-            // 8. Debug console (optional)
-            if (includeDebugConsole)
-            {
-                var console = new GameObject("DebugConsole").AddComponent<DebugConsole>();
-                DontDestroyOnLoad(console.gameObject);
-                RWDebug.System("DebugConsole spawned.");
-            }
-
-            RWDebug.System("FrameworkBootstrapper complete.");
+            RWDebug.System("FrameworkBootstrapper setup complete.");
         }
     }
 }
