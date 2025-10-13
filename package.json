@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "displayName": "Rude Warriors Focused Framework",
   "description": "A focused, modular C# framework for Unity — built by Rude Warrior's Studio. Provides service architecture, event bus, data management, and debugging utilities for clean, maintainable projects.",
-  "unity": "2021.3",
-  "unityRelease": "0f1",
+  "unity": "2022.3",
   "author": {
     "name": "Reaper (Rude Warrior's Studio)",
     "email": "soultaker.dev@outlook.com",
@@ -24,7 +23,11 @@
     "eventbus",
     "core"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "com.unity.inputsystem": "1.7.0",
+    "com.unity.ugui": "2.0.0",
+    "com.unity.modules.physics": "1.0.0"
+  },
   "samples": [
     {
       "displayName": "Basic Setup Example",
