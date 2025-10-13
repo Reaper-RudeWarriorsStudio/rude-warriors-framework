@@ -20,3 +20,6 @@ It follows a **service-based architecture** centered on a global `ServiceLocator
 Keep it **fast**, **flat**, and **modular**.  
 No bloated managers. No tangled dependencies.  
 Every system should live alone but **speak through the framework**.
+
+## ⚖️ License
+Licensed under the [MIT License](./LICENSE) © 2025 Rude Warrior’s Studio
