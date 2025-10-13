@@ -1,24 +1,22 @@
-# Rude Warriors Framework
+# 🧠 Rude Warriors Framework
 
-**Rude Warriors Framework** is a lightweight, modular Unity foundation designed for clean architecture, reusability, and pure control.  
-It follows a service-based structure built around a centralized `ServiceLocator`, allowing systems to stay independent and extendable.
+**Rude Warriors Framework** is a lightweight, modular Unity foundation built for clarity, reusability, and full control.  
+It follows a **service-based architecture** centered on a global `ServiceLocator`, allowing systems to remain independent, extendable, and clean.
 
 ---
 
 ## 🚀 Features
-- **Service Locator Core** — simple dependency management for any system.  
-- **Input Router** — unified input abstraction layer (WIP).  
-- **Data Layer** — easy save/load handling for player data and settings (WIP).  
-- **Event Bus** *(Planned)* — decoupled communication between systems.  
-- **Scene Context System** *(Planned)* — automated service registration and teardown.
+
+- **Service Locator Core** — simple, dependency-free management for any system.  
+- **Input Router** *(WIP)* — unified input abstraction layer for controller and keyboard.  
+- **Data Layer** *(WIP)* — lightweight save/load system for player data and settings.  
+- **Event Bus** *(Planned)* — decoupled communication across systems.  
+- **Scene Context System** *(Planned)* — automated registration and teardown between scenes.  
 
 ---
 
-## 🧠 Philosophy
+## 🧩 Philosophy
+
 Keep it **fast**, **flat**, and **modular**.  
-No monoliths. No unnecessary managers.  
-Each system should live alone but speak through the framework.
-
----
-
-## 🧩 Folder Structure
+No bloated managers. No tangled dependencies.  
+Every system should live alone but **speak through the framework**.
