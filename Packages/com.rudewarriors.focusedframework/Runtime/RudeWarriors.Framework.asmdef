@@ -1,11 +1,38 @@
 {
-  "name": "RudeWarriors.Framework",
-  "rootNamespace": "RudeWarriors.Framework",
-  "references": [],
-  "includePlatforms": [],
-  "excludePlatforms": ["Editor"],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "autoReferenced": true,
-  "noEngineReferences": false
+  "name": "com.rudewarriors.focusedframework",
+  "version": "1.0.0",
+  "displayName": "Rude Warriors Focused Framework",
+  "description": "A focused, modular C# framework for Unity — built by Rude Warrior's Studio. Provides service architecture, event bus, data management, and debugging utilities for clean, maintainable projects.",
+  "unity": "2022.3",
+  "author": {
+    "name": "Reaper (Rude Warrior's Studio)",
+    "email": "soultaker.dev@outlook.com",
+    "url": "https://github.com/Reaper-RudeWarriorsStudio"
+  },
+  "license": "MIT",
+  "documentationUrl": "https://github.com/Reaper-RudeWarriorsStudio/rude-warriors-framework/blob/main/Docs~/Architecture.md",
+  "changelogUrl": "https://github.com/Reaper-RudeWarriorsStudio/rude-warriors-framework/blob/main/CHANGELOG.md",
+  "keywords": [
+    "unity",
+    "framework",
+    "architecture",
+    "services",
+    "rude",
+    "warriors",
+    "focused",
+    "eventbus",
+    "core"
+  ],
+  "dependencies": {
+    "com.unity.inputsystem": "1.7.0",
+    "com.unity.ugui": "2.0.0",
+    "com.unity.modules.physics": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Basic Setup Example",
+      "description": "A minimal example showing how to initialize and link the Focused Framework using the fluent builder API.",
+      "path": "Samples~/BasicSetup"
+    }
+  ]
 }
