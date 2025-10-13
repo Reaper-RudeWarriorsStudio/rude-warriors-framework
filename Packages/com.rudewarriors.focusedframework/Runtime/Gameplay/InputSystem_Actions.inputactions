@@ -1,0 +1,74 @@
+{
+    "name": "InputSystem_Actions",
+    "maps": [
+        {
+            "name": "Player",
+            "actions": [
+                { "name": "Move", "type": "Value", "expectedControlType": "Vector2" },
+                { "name": "Look", "type": "Value", "expectedControlType": "Vector2" },
+                { "name": "Jump", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Crouch", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Sprint", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Attack", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Interact", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Next", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Previous", "type": "Button", "expectedControlType": "Button" }
+            ],
+            "bindings": [
+                { "path": "<Keyboard>/w", "action": "Move", "isComposite": true, "name": "WASD" },
+                { "path": "<Keyboard>/a", "name": "left", "action": "Move", "isPartOfComposite": true },
+                { "path": "<Keyboard>/d", "name": "right", "action": "Move", "isPartOfComposite": true },
+                { "path": "<Keyboard>/s", "name": "down", "action": "Move", "isPartOfComposite": true },
+                { "path": "<Gamepad>/leftStick", "action": "Move" },
+                { "path": "<Pointer>/delta", "action": "Look" },
+                { "path": "<Gamepad>/rightStick", "action": "Look" },
+                { "path": "<Keyboard>/space", "action": "Jump" },
+                { "path": "<Keyboard>/leftCtrl", "action": "Crouch" },
+                { "path": "<Keyboard>/leftShift", "action": "Sprint" },
+                { "path": "<Mouse>/leftButton", "action": "Attack" },
+                { "path": "<Keyboard>/e", "action": "Interact" },
+                { "path": "<Keyboard>/1", "action": "Previous" },
+                { "path": "<Keyboard>/2", "action": "Next" }
+            ]
+        },
+        {
+            "name": "UI",
+            "actions": [
+                { "name": "Navigate", "type": "Value", "expectedControlType": "Vector2" },
+                { "name": "Submit", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Cancel", "type": "Button", "expectedControlType": "Button" },
+                { "name": "Point", "type": "PassThrough", "expectedControlType": "Vector2" },
+                { "name": "Click", "type": "PassThrough", "expectedControlType": "Button" },
+                { "name": "ScrollWheel", "type": "PassThrough", "expectedControlType": "Vector2" }
+            ],
+            "bindings": [
+                { "path": "<Keyboard>/w", "action": "Navigate", "isComposite": true, "name": "WASD" },
+                { "path": "<Keyboard>/s", "name": "down", "action": "Navigate", "isPartOfComposite": true },
+                { "path": "<Keyboard>/a", "name": "left", "action": "Navigate", "isPartOfComposite": true },
+                { "path": "<Keyboard>/d", "name": "right", "action": "Navigate", "isPartOfComposite": true },
+                { "path": "<Keyboard>/enter", "action": "Submit" },
+                { "path": "<Keyboard>/escape", "action": "Cancel" },
+                { "path": "<Pointer>/position", "action": "Point" },
+                { "path": "<Pointer>/press", "action": "Click" },
+                { "path": "<Mouse>/scroll", "action": "ScrollWheel" }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard&Mouse",
+            "bindingGroup": "Keyboard&Mouse",
+            "devices": [
+                { "devicePath": "<Keyboard>" },
+                { "devicePath": "<Mouse>" }
+            ]
+        },
+        {
+            "name": "Gamepad",
+            "bindingGroup": "Gamepad",
+            "devices": [
+                { "devicePath": "<Gamepad>" }
+            ]
+        }
+    ]
+}
