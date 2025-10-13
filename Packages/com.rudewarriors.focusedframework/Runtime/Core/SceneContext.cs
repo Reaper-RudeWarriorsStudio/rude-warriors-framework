@@ -1,58 +1,68 @@
 using UnityEngine;
-using System;
-using System.Linq;
-using RudeWarriors.Framework.Core;
+using System.Collections.Generic;
 
 namespace RudeWarriors.Framework.Core
 {
     /// <summary>
-    /// Automatically registers and clears scene-level services with the ServiceLocator.
-    /// Attach this to a GameObject in each scene to manage contextual services.
+    /// SceneContext manages scene-level service registration.
+    /// When a new scene loads, it automatically discovers any
+    /// components that implement IService and registers them
+    /// to the global ServiceLocator.
     /// </summary>
-    [DefaultExecutionOrder(-100)] // ensures it runs before normal scripts
+    [DefaultExecutionOrder(-200)]
     public class SceneContext : MonoBehaviour
     {
-        [SerializeField] private bool clearOnUnload = true;
+        private readonly List<IService> _registered = new();
 
         private void Awake()
         {
-            RegisterSceneServices();
-        }
+            // Prevent duplicate SceneContexts
+            var existing = FindObjectsByType<SceneContext>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
 
-        private void OnDestroy()
-        {
-            if (clearOnUnload)
-                ServiceLocator.Clear();
+            if (existing.Length > 1)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            DontDestroyOnLoad(gameObject);
+            RegisterSceneServices();
         }
 
         private void RegisterSceneServices()
         {
-            // Find all MonoBehaviours with [AutoRegister] attribute
-            var allBehaviours = FindObjectsOfType<MonoBehaviour>(true);
-            var autoRegisterTypes = allBehaviours
-                .Select(b => new { Behaviour = b, Attr = b.GetType().GetCustomAttributes(typeof(AutoRegisterAttribute), true).FirstOrDefault() })
-                .Where(x => x.Attr != null)
-                .ToList();
+            _registered.Clear();
 
-            foreach (var entry in autoRegisterTypes)
+            // Find all services in the scene
+            var services = FindObjectsByType<MonoBehaviour>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+            foreach (var mb in services)
             {
-                Type type = entry.Behaviour.GetType().GetInterfaces().FirstOrDefault();
-                if (type == null)
+                if (mb is IService service)
                 {
-                    Debug.LogWarning($"[SceneContext] {entry.Behaviour.name} has [AutoRegister] but no interface found. Skipping.");
-                    continue;
+                    ServiceLocator.Register(service.GetType(), service);
+                    _registered.Add(service);
+                    RWDebug.System($"[SceneContext] Registered service: {service.GetType().Name}");
                 }
-
-                ServiceLocator.Register(Convert.ChangeType(entry.Behaviour, type));
-                Debug.Log($"[SceneContext] Registered {type.Name} from {entry.Behaviour.name}");
             }
         }
-    }
 
-    /// <summary>
-    /// Marks a MonoBehaviour as automatically registered by SceneContext.
-    /// Must implement at least one interface.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public class AutoRegisterAttribute : Attribute { }
+        private void OnDestroy()
+        {
+            // Unregister scene-bound services when unloading
+            foreach (var s in _registered)
+            {
+                ServiceLocator.Unregister(s.GetType());
+                RWDebug.System($"[SceneContext] Unregistered service: {s.GetType().Name}");
+            }
+
+            _registered.Clear();
+        }
+    }
 }
