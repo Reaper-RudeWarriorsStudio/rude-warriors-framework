@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using RudeWarriors.Framework.Core;
+using RudeWarriors.FocusedFramework.Editor;
 
 namespace RudeWarriors.Framework.Editor
 {
