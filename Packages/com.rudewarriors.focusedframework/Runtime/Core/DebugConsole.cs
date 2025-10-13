@@ -24,14 +24,19 @@ namespace RudeWarriors.Framework.Core
 
         private void Awake()
         {
-            if (FindObjectsOfType<DebugConsole>().Length > 1)
+            // Prevent duplicates
+            if (FindObjectsByType<DebugConsole>(FindObjectsSortMode.None).Length > 1)
             {
                 Destroy(gameObject);
                 return;
             }
 
             DontDestroyOnLoad(gameObject);
-            _bus = ServiceLocator.TryGet<IEventBus>(out var bus) ? bus : null;
+
+            // Try to hook into EventBus
+            if (ServiceLocator.TryGet<IEventBus>(out var bus))
+                _bus = bus;
+
             Log("DebugConsole initialized.");
         }
 
@@ -58,8 +63,8 @@ namespace RudeWarriors.Framework.Core
                 GUILayout.Label(entry);
 
             GUILayout.EndScrollView();
-
             GUILayout.Space(5);
+
             GUILayout.BeginHorizontal();
             GUI.SetNextControlName("ConsoleInput");
             _input = GUILayout.TextField(_input);
@@ -75,9 +80,7 @@ namespace RudeWarriors.Framework.Core
         {
             string cmd = _input.Trim();
             _input = string.Empty;
-
-            if (string.IsNullOrEmpty(cmd))
-                return;
+            if (string.IsNullOrEmpty(cmd)) return;
 
             Log($"> {cmd}");
 
@@ -97,33 +100,15 @@ namespace RudeWarriors.Framework.Core
                     break;
 
                 case "services":
-                    var field = typeof(ServiceLocator).GetField("_services",
-                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                    var services = field?.GetValue(null) as Dictionary<Type, object>;
-                    if (services == null || services.Count == 0)
-                    {
-                        Log("No services registered.");
-                        break;
-                    }
-                    foreach (var s in services)
-                        Log($"• {s.Key.Name} → {(s.Value != null ? s.Value.GetType().Name : "null")}");
+                    ShowServices();
                     break;
 
                 case "publish":
-                    if (parts.Length > 1 && _bus != null)
-                    {
-                        string evt = parts[1];
-                        _bus.Publish(evt);
-                        Log($"Published event: {evt}");
-                    }
-                    else Log("Usage: publish <EventName>");
+                    PublishEvent(parts);
                     break;
 
                 case "quit":
-                    Application.Quit();
-#if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
-#endif
+                    QuitGame();
                     break;
 
                 default:
@@ -132,10 +117,47 @@ namespace RudeWarriors.Framework.Core
             }
         }
 
+        private void ShowServices()
+        {
+            var field = typeof(ServiceLocator).GetField("_services",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var services = field?.GetValue(null) as Dictionary<Type, object>;
+
+            if (services == null || services.Count == 0)
+            {
+                Log("No services registered.");
+                return;
+            }
+
+            foreach (var s in services)
+                Log($"• {s.Key.Name} → {(s.Value != null ? s.Value.GetType().Name : "null")}");
+        }
+
+        private void PublishEvent(string[] parts)
+        {
+            if (parts.Length > 1 && _bus != null)
+            {
+                string evt = parts[1];
+                _bus.Publish(evt);
+                Log($"Published event: {evt}");
+            }
+            else Log("Usage: publish <EventName>");
+        }
+
+        private void QuitGame()
+        {
+            Log("Quitting game...");
+            Application.Quit();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        }
+
         private void Log(string message)
         {
             if (_log.Count >= maxLogCount)
                 _log.RemoveAt(0);
+
             _log.Add(message);
         }
     }
