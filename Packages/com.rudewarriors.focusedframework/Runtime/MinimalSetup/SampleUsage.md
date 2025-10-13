@@ -5,4 +5,5 @@
    ```csharp
    var bus = ServiceLocator.Get<IEventBus>();
    bus.Publish(new PlayerSpawned { Id = 1 });
-csharp```
+
+
