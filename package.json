@@ -3,15 +3,16 @@
   "displayName": "Rude Warriors Framework",
   "version": "0.1.0",
   "unity": "2021.3",
-  "description": "Lightweight, modular service-based framework for Unity (ServiceLocator, EventBus, Data).",
+  "description": "Lightweight modular service-based framework for Unity.",
   "author": {
-    "name": "Reaper — Rude Warriors Studio"
+    "name": "Rude Warrior’s Studio",
+    "url": "https://github.com/yourusername/rude-warriors-framework"
   },
-  "keywords": ["framework", "services", "event-bus", "data", "editor"],
+  "license": "MIT",
   "samples": [
     {
       "displayName": "Minimal Setup",
-      "description": "Bootstrap + service registration example.",
+      "description": "Example of bootstrap and service registration.",
       "path": "Samples~/MinimalSetup"
     }
   ]
