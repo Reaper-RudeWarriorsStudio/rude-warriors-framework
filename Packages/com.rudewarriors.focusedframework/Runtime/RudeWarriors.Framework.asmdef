@@ -1,0 +1,11 @@
+{
+  "name": "RudeWarriors.Framework",
+  "rootNamespace": "RudeWarriors.Framework",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": ["Editor"],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "autoReferenced": true,
+  "noEngineReferences": false
+}
