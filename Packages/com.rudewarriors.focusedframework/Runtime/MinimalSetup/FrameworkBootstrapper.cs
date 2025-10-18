@@ -1,7 +1,7 @@
 using UnityEngine;
 using RudeWarriors.Framework.Core;
 
-public class FrameworkBootstrapper : MonoBehaviour
+public class MinimalFrameworkBootstrapper : MonoBehaviour
 {
     private void Awake()
     {
