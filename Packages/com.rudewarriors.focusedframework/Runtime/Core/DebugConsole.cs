@@ -133,17 +133,31 @@ namespace RudeWarriors.Framework.Core
                 Log($"• {s.Key.Name} → {(s.Value != null ? s.Value.GetType().Name : "null")}");
         }
 
-        private void PublishEvent(string[] parts)
-        {
-            if (parts.Length > 1 && _bus != null)
-            {
-                string evt = parts[1];
-                _bus.Publish(evt);
-                Log($"Published event: {evt}");
-            }
-            else Log("Usage: publish <EventName>");
-        }
+        public struct DebugCommandEvent
+{
+    public string CommandName;
+}
 
+private void PublishEvent(string[] parts)
+{
+    if (parts == null || parts.Length < 2 || _bus == null)
+    {
+        Log("Usage: publish <EventName>");
+        return;
+    }
+
+    string eventName = parts[1];
+
+    try
+    {
+        _bus.Publish(new DebugCommandEvent { CommandName = eventName });
+        Log($"Published debug event: {eventName}");
+    }
+    catch (Exception ex)
+    {
+        Log($"Failed to publish event: {ex.Message}");
+    }
+}
         private void QuitGame()
         {
             Log("Quitting game...");
