@@ -1,5 +1,6 @@
 using System.IO;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace RudeWarriors.Framework.Core
@@ -66,8 +67,30 @@ namespace RudeWarriors.Framework.Core
         public void Save<T>(string key, T value)
         {
             string path = GetPath(key);
-            string json = JsonUtility.ToJson(value, true);
-            File.WriteAllText(path, json);
+            try
+            {
+                if (value == null)
+                {
+                    // Save explicit null to file so load can detect absence/intentional null
+                    File.WriteAllText(path, "null");
+                    return;
+                }
+
+                var type = value.GetType();
+                bool isSerializable = type.IsSerializable || Attribute.IsDefined(type, typeof(SerializableAttribute));
+                if (!isSerializable)
+                {
+                    Debug.LogError($"JsonFileStore: type '{type.FullName}' is not marked [System.Serializable]; cannot serialize to '{path}'.");
+                    return;
+                }
+
+                string json = JsonUtility.ToJson(value);
+                File.WriteAllText(path, json);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to save data to {path}: {ex}");
+            }
         }
 
         public bool TryLoad<T>(string key, out T value)
