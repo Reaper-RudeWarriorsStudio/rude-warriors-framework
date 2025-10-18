@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RudeWarriors.Framework.Core
 {
@@ -13,6 +14,7 @@ namespace RudeWarriors.Framework.Core
     public class SceneContext : MonoBehaviour
     {
         private readonly List<IService> _registered = new();
+        private readonly HashSet<System.Type> _registeredTypes = new();
 
         private void Awake()
         {
@@ -32,9 +34,14 @@ namespace RudeWarriors.Framework.Core
             RegisterSceneServices();
         }
 
+        /// <summary>
+        /// Discovers and registers all IService implementations in the scene.
+        /// Registers both interfaces and concrete types for maximum flexibility.
+        /// </summary>
         private void RegisterSceneServices()
         {
             _registered.Clear();
+            _registeredTypes.Clear();
 
             // Find all services in the scene
             var services = FindObjectsByType<MonoBehaviour>(
@@ -46,23 +53,45 @@ namespace RudeWarriors.Framework.Core
             {
                 if (mb is IService service)
                 {
-                    ServiceLocator.Register(service.GetType(), service);
+                    // Register all IService-derived interfaces
+                    var interfaces = mb.GetType().GetInterfaces()
+                        .Where(i => i != typeof(IService) && typeof(IService).IsAssignableFrom(i))
+                        .ToList();
+
+                    bool registered = false;
+
+                    foreach (var iface in interfaces)
+                    {
+                        ServiceLocator.Register(iface, service);
+                        _registeredTypes.Add(iface);
+                        registered = true;
+                        RWDebug.System($"[SceneContext] Registered {mb.GetType().Name} as {iface.Name}");
+                    }
+
+                    // Also register concrete type if no interfaces found
+                    if (!registered)
+                    {
+                        ServiceLocator.Register(mb.GetType(), service);
+                        _registeredTypes.Add(mb.GetType());
+                        RWDebug.System($"[SceneContext] Registered service: {mb.GetType().Name}");
+                    }
+
                     _registered.Add(service);
-                    RWDebug.System($"[SceneContext] Registered service: {service.GetType().Name}");
                 }
             }
         }
 
         private void OnDestroy()
         {
-            // Unregister scene-bound services when unloading
-            foreach (var s in _registered)
+            // Unregister all types that were registered
+            foreach (var type in _registeredTypes)
             {
-                ServiceLocator.Unregister(s.GetType());
-                RWDebug.System($"[SceneContext] Unregistered service: {s.GetType().Name}");
+                ServiceLocator.Unregister(type);
+                RWDebug.System($"[SceneContext] Unregistered: {type.Name}");
             }
 
             _registered.Clear();
+            _registeredTypes.Clear();
         }
     }
 }
