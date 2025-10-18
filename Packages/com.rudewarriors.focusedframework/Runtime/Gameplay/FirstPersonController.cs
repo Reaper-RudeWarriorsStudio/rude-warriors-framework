@@ -1,11 +1,12 @@
 using UnityEngine;
 using RudeWarriors.Framework.Core;
-using UnityEngine.InputSystem;
+using UnityEngine.inputActionsSystem;
 
 
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
+#if ENABLE_inputActions_SYSTEM
+using UnityEngine.inputActionsSystem;
 #endif
+
 
 [AutoRegister(persistent: true)]
 [RequireComponent(typeof(CharacterController))]
@@ -36,21 +37,21 @@ public class FirstPersonController : MonoBehaviour, IService
     private float targetHeight;
     private bool isGrounded;
 
-#if ENABLE_INPUT_SYSTEM
-    private InputSystem_Actions inputActions;
-   // auto-generated input map
+#if ENABLE_inputActions_SYSTEM
+    private inputActionsSystem_Actions inputActionsActions;
+   // auto-generated inputActions map
 #endif
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
 
-#if ENABLE_INPUT_SYSTEM
-        input = new PlayerInputActions();
-        input.Enable();
-        RWDebug.System("[FPC] Using new Input System.");
+#if ENABLE_inputActions_SYSTEM
+        inputActions = new PlayerinputActionsActions();
+        inputActions.Enable();
+        RWDebug.System("[FPC] Using new inputActions System.");
 #else
-        RWDebug.System("[FPC] Using legacy Input Manager.");
+        RWDebug.System("[FPC] Using legacy inputActions Manager.");
 #endif
 
         if (cameraPivot == null)
@@ -94,19 +95,19 @@ public class FirstPersonController : MonoBehaviour, IService
         bool sprint = false;
         bool crouch = false;
 
-#if ENABLE_INPUT_SYSTEM
-        Vector2 move = input.Player.Move.ReadValue<Vector2>();
+#if ENABLE_inputActions_SYSTEM
+        Vector2 move = inputActions.Player.Move.ReadValue<Vector2>();
         x = move.x;
         z = move.y;
-        jump = input.Player.Jump.triggered;
-        sprint = input.Player.Sprint.IsPressed();
-        crouch = input.Player.Crouch.IsPressed();
+        jump = inputActions.Player.Jump.triggered;
+        sprint = inputActions.Player.Sprint.IsPressed();
+        crouch = inputActions.Player.Crouch.IsPressed();
 #else
-        x = Input.GetAxis("Horizontal");
-        z = Input.GetAxis("Vertical");
-        jump = Input.GetButtonDown("Jump");
-        sprint = Input.GetKey(KeyCode.LeftShift);
-        crouch = Input.GetKey(KeyCode.LeftControl);
+        x = inputActions.GetAxis("Horizontal");
+        z = inputActions.GetAxis("Vertical");
+        jump = inputActions.GetButtonDown("Jump");
+        sprint = inputActions.GetKey(KeyCode.LeftShift);
+        crouch = inputActions.GetKey(KeyCode.LeftControl);
 #endif
 
         float speed = crouch ? crouchSpeed : (sprint ? sprintSpeed : walkSpeed);
@@ -122,10 +123,10 @@ public class FirstPersonController : MonoBehaviour, IService
 
     private void HandleCrouch()
     {
-#if ENABLE_INPUT_SYSTEM
-        bool isCrouching = input.Player.Crouch.IsPressed();
+#if ENABLE_inputActions_SYSTEM
+        bool isCrouching = inputActions.Player.Crouch.IsPressed();
 #else
-        bool isCrouching = Input.GetKey(KeyCode.LeftControl);
+        bool isCrouching = inputActions.GetKey(KeyCode.LeftControl);
 #endif
         targetHeight = isCrouching ? crouchHeight : standingHeight;
         controller.height = Mathf.Lerp(controller.height, targetHeight, Time.deltaTime * 10f);
@@ -136,13 +137,13 @@ public class FirstPersonController : MonoBehaviour, IService
         float mouseX = 0f;
         float mouseY = 0f;
 
-#if ENABLE_INPUT_SYSTEM
-        Vector2 look = input.Player.Look.ReadValue<Vector2>();
+#if ENABLE_inputActions_SYSTEM
+        Vector2 look = inputActions.Player.Look.ReadValue<Vector2>();
         mouseX = look.x * sensitivity;
         mouseY = look.y * sensitivity;
 #else
-        mouseX = Input.GetAxis("Mouse X") * sensitivity;
-        mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+        mouseX = inputActions.GetAxis("Mouse X") * sensitivity;
+        mouseY = inputActions.GetAxis("Mouse Y") * sensitivity;
 #endif
 
         xRotation -= mouseY;
